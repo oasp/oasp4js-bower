@@ -6,45 +6,11 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         config: require('./config.json'),
-        connect: {
-            options: {
-                port: 9000,
-                hostname: 'localhost'
-            },
-            develop: {
-                options: {
-                    open: true,
-                    base: ['<%= config.tmp %>','<%= config.app %>']
-                }
-            },
+        uglify: {
             dist: {
-                options: {
-                    base: ['<%= config.dist %>']
-                }
-            }
-        },
-        less: {
-            develop: {
-                options: {
-                    yuicompress: false
-                },
                 files: {
-                    '<%= config.tmp %>/css/oasp.css': '<%= config.app %>/css/oasp.less'
+                    '<%= config.dist %>/oasp.min.js': ['<%= config.src %>/oasp.js']
                 }
-            },
-            dist: {
-                options: {
-                    yuicompress: true
-                },
-                files: {
-                    '<%= config.dist %>/css/oasp.min.css': '<%= config.app %>/css/oasp.less'
-                }
-            }
-        },
-        watch: {
-            less: {
-                files: ['<%= config.app %>/css/*.less'],
-                tasks: ['less']
             }
         },
         // Empties folders to start fresh
@@ -58,17 +24,10 @@ module.exports = function (grunt) {
                         ]
                     }
                 ]
-            },
-            develop: '<%= config.tmp %>/{,*/}*'
-        }
+            }}
     });
-    grunt.registerTask('serve', [
-        'build:develop', 'connect:develop', 'watch'
-    ]);
-    grunt.registerTask('build:develop', [
-        'clean:develop', 'less:develop'
-    ]);
-    grunt.registerTask('build:dist', [
-        'clean:dist', 'less:dist'
+
+    grunt.registerTask('build', [
+        'clean', 'uglify'
     ]);
 };
