@@ -1,7 +1,7 @@
-The Open Application Standard Platform for JavaScript (oasp4js)
+What is oasp4js?
 ==========
 
-Welcome to The Open Application Standard Platform for JavaScript (oasp4js)! It gives you a platform combining best-in-class frameworks and tools to start up a JavaScript project very quickly. Currently, the focus of oasp4js is put on JavaScripts applications which run in the web browser (the growing trend towards using JavaScript also on the server side did not go unnoticed however).
+oasp4js stands for Open Application Standard Platform for JavaScript. oasp4js gives you a platform combining best-in-class frameworks and tools to start up a JavaScript project very quickly. Currently, the focus of oasp4js is put on JavaScript applications which run in the web browser (the growing trend towards using JavaScript also on the server side did not go unnoticed however).
 
 What does oasp4js offer?
 ==========
