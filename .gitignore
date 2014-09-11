@@ -4,5 +4,3 @@ dist
 .tmp
 .idea/
 *.iml
-.settings
-.project
