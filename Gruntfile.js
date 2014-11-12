@@ -9,7 +9,7 @@ module.exports = function (grunt) {
         uglify: {
             dist: {
                 files: {
-                    '<%= config.dist %>/oasp.min.js': ['<%= config.src %>/oasp.js']
+                    '<%= config.paths.dist %>/oasp.min.js': ['<%= config.src %>/oasp.js']
                 }
             }
         },
@@ -20,7 +20,7 @@ module.exports = function (grunt) {
                     {
                         dot: true,
                         src: [
-                            '<%= config.dist %>/{,*/}*'
+                            '<%= config.paths.dist %>/{,*/}*'
                         ]
                     }
                 ]
