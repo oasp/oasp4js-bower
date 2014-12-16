@@ -70,13 +70,23 @@ module.exports = function (grunt) {
                         expand: true,
                         cwd: '<%= config.paths.app %>',
                         dest: '<%= config.paths.dist %>',
-                        src: _.union(grunt.config().config.tasks.img(),['!**/sprite/**'])
+                        src: _.union(grunt.config().config.tasks.img(), ['!**/sprite/**'])
                     },
                     {
                         expand: true,
                         cwd: '<%= config.paths.app %>',
                         dest: '<%= config.paths.dist %>',
                         src: grunt.config().config.tasks.i18n()
+                    }
+                ]
+            },
+            lib: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%= config.paths.app %>',
+                        dest: '<%= config.paths.dist %>',
+                        src: _.union(grunt.config().config.tasks.copyless(), ['!**/sprite/**'])
                     }
                 ]
             }
@@ -97,7 +107,7 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         cwd: '<%= config.paths.tmp %>/concat/js',
-                        src: 'app.js',
+                        src: 'oasp.js',
                         dest: '<%= config.paths.tmp %>/concat/js'
                     }
                 ]
@@ -126,19 +136,24 @@ module.exports = function (grunt) {
             options: {
                 assetsDirs: ['<%= config.paths.dist %>', '<%= config.paths.dist %>/img']
             }
+        },
+        concat: {
+            lib: {
+                src: grunt.config().config.tasks.script.sources(),
+                dest: '<%= config.paths.tmp%>/concat/js/oasp.js'
+            }
+        },
+        uglify: {
+            lib: {
+                files: {
+                    '<%= config.paths.dist %>/oasp.min.js': ['<%= config.paths.tmp %>/concat/js/oasp.js']
+                }
+            }
         }
     });
 
     grunt.registerTask('build:process', [
         'wiredep', 'sprite', 'styles', 'html:all', 'html2js', 'html:index'
-    ]);
-
-    grunt.registerTask('build:process:src', [
-        'styles', 'html:all', 'html2js', 'html:index'
-    ]);
-
-    grunt.registerTask('build:library:develop', [
-        'clean:develop', 'build:process:src'
     ]);
 
     grunt.registerTask('build:develop', [
@@ -148,6 +163,11 @@ module.exports = function (grunt) {
     grunt.registerTask('build:dist', [
         'clean:dist', 'build:process', 'useminPrepare', 'concat:generated', 'ngAnnotate', 'copy:dist', 'eol', 'uglify', 'cssmin', 'filerev', 'usemin'
     ]);
+
+    grunt.registerTask('build:lib', [
+        'clean:dist', 'html:all', 'html2js', 'concat:lib', 'ngAnnotate', 'copy:lib', 'eol', 'uglify:lib'
+    ]);
+
     grunt.registerTask('build:ci', [
         'build:dist', 'karma:ci'
     ]);

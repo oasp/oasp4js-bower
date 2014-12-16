@@ -4,18 +4,13 @@ module.exports = (function () {
         paths = {
             tmp: ".tmp",
             dist: "dist",
-            app: "src",
+            app: "app",
             test: "test"
         },
         modules = [
-            'main',
             'oasp-security',
             'oasp-ui',
-            'oasp-mock',
-            'oasp-i18n',
-            'offer-mgmt',
-            'sales-mgmt',
-            'table-mgmt'
+            'oasp-i18n'
         ],
         builder = (function () {
             return {
@@ -46,6 +41,9 @@ module.exports = (function () {
             less: function () {
                 return builder.buildForModules('{app}/{module}/css/{module}.less');
             },
+            copyless: function () {
+                return builder.buildForModules('{module}/css/**/*.less');
+            },
             i18n: function () {
                 return builder.buildForModules('{module}/i18n/**/*.json');
             },
@@ -53,12 +51,13 @@ module.exports = (function () {
                 return builder.buildForModules('{module}/img/**');
             },
             html2js: function () {
-                var ngTempaltesPaths = {}, i, srcPath;
+                var ngTempaltesPaths = {}, i, tempSrcPath, srcPath;
                 for (i = 0; i < modules.length; i += 1) {
-                    srcPath = builder.build('{tmp}/{module}/html/cached', modules[i]);
+                    tempSrcPath = builder.build('{tmp}/{module}/html/cached', modules[i]);
+                    srcPath = builder.build('{app}/{module}/html/cached', modules[i]);
                     if (grunt.file.isDir(srcPath)) {
                         ngTempaltesPaths[modules[i]] = {
-                            src: srcPath + '/**/*.html',
+                            src: tempSrcPath + '/**/*.html',
                             dest: builder.build('{tmp}/{module}/js/{module}.templates.js', modules[i])
                         };
                     }
@@ -101,6 +100,15 @@ module.exports = (function () {
                         sourcesPatterns.push(builder.build('{app}/{module}/js/**/*.spec.js', modules[i]));
                     }
                     return sourcesPatterns;
+                }
+            },
+            script: {
+                sources: function () {
+                    return [builder.build('{app}/*.module.js')].concat(builder.buildForModules(
+                        '{app}/{module}/js/**/*.module.js',
+                        '{app}/{module}/js/**/*.js',
+                        '{tmp}/{module}/js/**/*.js'
+                    ), ['!**/*spec.js', '!**/*mock.js']);
                 }
             },
             html: {

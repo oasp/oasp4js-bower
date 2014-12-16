@@ -8,7 +8,12 @@ module.exports = function (grunt) {
             {
                 options: {
                     module: function (path, taskName) {
-                        return 'app.' + taskName + '.templates';
+                        var toCamel = function (str) {
+                            return str.replace(/-([a-z])/g, function (g) {
+                                return g[1].toUpperCase();
+                            });
+                        };
+                        return 'oasp.' + toCamel(taskName) + '.templates';
                     },
                     singleModule: true,
                     rename: function (moduleName) {
