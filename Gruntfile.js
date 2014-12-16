@@ -1,33 +1,30 @@
 module.exports = function (grunt) {
+    'use strict';
+    //api from grunt is not yet exposed
+    grunt.mergeConfig = grunt.config.merge;
     // Load grunt tasks automatically
-    require('load-grunt-tasks')(grunt);
+    require('jit-grunt')(grunt, {
+        sprite: 'grunt-spritesmith',
+        configureProxies: 'grunt-connect-proxy',
+        useminPrepare: 'grunt-usemin'
+    });
     // Time how long tasks take. Can help when optimizing build times
     require('time-grunt')(grunt);
 
-    grunt.initConfig({
-        config: require('./config.json'),
-        uglify: {
-            dist: {
-                files: {
-                    '<%= config.paths.dist %>/oasp.min.js': ['<%= config.src %>/oasp.js']
-                }
-            }
-        },
-        // Empties folders to start fresh
-        clean: {
-            dist: {
-                files: [
-                    {
-                        dot: true,
-                        src: [
-                            '<%= config.paths.dist %>/{,*/}*'
-                        ]
-                    }
-                ]
-            }}
+    grunt.mergeConfig({
+        config: require('./grunt/config.js')
     });
+    //load sub configs
+    require('./grunt/build.js')(grunt);
+    require('./grunt/sonar.js')(grunt);
+    require('./grunt/serve.js')(grunt);
+    require('./grunt/test.js')(grunt);
+    require('./grunt/watch.js')(grunt);
 
-    grunt.registerTask('build', [
-        'clean', 'uglify'
+    grunt.registerTask('default', [
+        'jslint:client', 'build:dist'
     ]);
+    grunt.registerTask('log', function () {
+        grunt.log.write(JSON.stringify(require('./grunt/config.js')));
+    });
 };
