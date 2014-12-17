@@ -15,10 +15,10 @@ You need the Node.js platform (including its package manager - npm) which allows
 When you use Bower, you just need to go to your application's directory (where you have the ´bower.json´ file) and execute:
 
 ```bash
-bower install https://github.com/oasp-ip/oasp4js.git --save
+bower install https://github.com/oasp/oasp4js.git --save
 ```
 
-Otherwise, go to the [distribution directory](https://github.com/oasp-ip/oasp4js/tree/master/dist) and copy the files to your application. 
+Otherwise, go to the [distribution directory](https://github.com/oasp/oasp4js/tree/master/dist) and copy the files to your application. 
 
 What oasp4js offers
 -----------------------
