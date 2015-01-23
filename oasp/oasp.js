@@ -266,48 +266,19 @@ angular.module('oasp.oaspSecurity')
         };
     });
 
-angular.module('oasp.oaspUi.buttonBar', ['oasp.oaspUi.templates']);
-
 angular.module('oasp.oaspUi.modal', ['oasp.oaspUi.spinner', 'ui.bootstrap.modal', 'oasp.oaspUi.templates']);
+
+angular.module('oasp.oaspUi.spinner', ['angularSpinner', 'oasp.oaspUi.templates']);
+
+angular.module('oasp.oaspUi.buttonBar', ['oasp.oaspUi.templates']);
 
 /*global TrNgGrid*/
 angular.module('oasp.oaspUi.oaspGrid', ['oasp.oaspUi.templates', 'trNgGrid']).run(function () {
     'use strict';
-    TrNgGrid.tableCssClass = "tr-ng-grid table table-striped";
+    TrNgGrid.tableCssClass = 'tr-ng-grid table table-striped';
 });
 
 angular.module('oasp.oaspUi', ['oasp.oaspUi.oaspGrid', 'oasp.oaspUi.spinner', 'oasp.oaspUi.modal', 'oasp.oaspUi.buttonBar']);
-
-angular.module('oasp.oaspUi.spinner', ['angularSpinner', 'oasp.oaspUi.templates']);
-
-angular.module('oasp.oaspUi.buttonBar')
-    .directive('buttonBar', function () {
-        'use strict';
-        return {
-            restrict: 'EA',
-            replace: true,
-            templateUrl: 'oasp-ui/html/button-bar/button-bar.html',
-            scope: {
-                buttonDefs: '='
-            },
-            link: function ($scope) {
-                $scope.onButtonClick = function (buttonDef) {
-                    if (buttonDef && angular.isFunction(buttonDef.onClick)) {
-                        buttonDef.onClick.apply(undefined, arguments);
-                    }
-                };
-                $scope.isButtonDisabled = function (buttonDef) {
-                    if (buttonDef && angular.isFunction(buttonDef.isActive)) {
-                        return !buttonDef.isActive.apply(undefined, arguments);
-                    }
-                    if (buttonDef && angular.isFunction(buttonDef.isNotActive)) {
-                        return buttonDef.isNotActive.apply(undefined, arguments);
-                    }
-                    return true;
-                };
-            }
-        };
-    });
 
 angular.module('oasp.oaspUi.modal')
     .constant('oaspUiModalDefaults', {
@@ -316,7 +287,7 @@ angular.module('oasp.oaspUi.modal')
     })
     .config(["$provide", "oaspUiModalDefaults", function ($provide, oaspUiModalDefaults) {
         'use strict';
-        var $modalDecorator = ["$delegate", "globalSpinner", function ($delegate, globalSpinner) {
+        var $modalDecorator = function ($delegate, globalSpinner) {
             return {
                 open: function (options) {
                     globalSpinner.show();
@@ -330,7 +301,8 @@ angular.module('oasp.oaspUi.modal')
                     return result;
                 }
             };
-        }];
+        };
+        $modalDecorator.$inject = ["$delegate", "globalSpinner"];
         $provide.decorator('$modal', $modalDecorator);
     }]);
 angular.module('oasp.oaspUi.spinner')
@@ -392,7 +364,7 @@ angular.module('oasp.oaspUi.spinner')
         return {
             restrict: 'A',
             replace: true,
-            templateUrl: 'oasp-ui/html/spinner/spinner.html',
+            templateUrl: 'oasp/oasp-ui/html/spinner/spinner.html',
             scope: {
                 spinnerVisible: '=spinner'
             },
@@ -401,25 +373,38 @@ angular.module('oasp.oaspUi.spinner')
             }
         };
     }]);
-angular.module('oasp.oaspUi.templates', []).run(['$templateCache', function($templateCache) {
-  $templateCache.put("oasp-ui/html/button-bar/button-bar.html",
-    "<div class=\"btn-group btn-group-sm\" role=\"group\">\n" +
-    "    <button data-ng-repeat=\"buttonDef in buttonDefs\"\n" +
-    "            data-ng-click=\"onButtonClick(buttonDef)\"\n" +
-    "            data-ng-disabled=\"isButtonDisabled(buttonDef)\"\n" +
-    "            class=\"btn btn-sm btn-default\">\n" +
-    "        <span data-ng-bind=\"buttonDef.label\"></span>\n" +
-    "    </button>\n" +
-    "</div>\n" +
-    "");
-  $templateCache.put("oasp-ui/html/spinner/spinner.html",
-    "<div class=\"spinner-container\" data-ng-show=\"spinnerVisible\">\n" +
-    "    <div class=\"spinner-backdrop\"></div>\n" +
-    "    <span us-spinner=\"spinnerOptions\"\n" +
-    "          data-spinner-start-active=\"1\"></span>\n" +
-    "</div>");
-}]);
 
+angular.module('oasp.oaspUi.buttonBar')
+    .directive('buttonBar', function () {
+        'use strict';
+        return {
+            restrict: 'EA',
+            replace: true,
+            templateUrl: 'oasp/oasp-ui/html/button-bar/button-bar.html',
+            scope: {
+                buttonDefs: '='
+            },
+            link: function ($scope) {
+                $scope.onButtonClick = function (buttonDef) {
+                    if (buttonDef && angular.isFunction(buttonDef.onClick)) {
+                        buttonDef.onClick.apply(undefined, arguments);
+                    }
+                };
+                $scope.isButtonDisabled = function (buttonDef) {
+                    if (buttonDef && angular.isFunction(buttonDef.isActive)) {
+                        return !buttonDef.isActive.apply(undefined, arguments);
+                    }
+                    if (buttonDef && angular.isFunction(buttonDef.isNotActive)) {
+                        return buttonDef.isNotActive.apply(undefined, arguments);
+                    }
+                    return true;
+                };
+            }
+        };
+    });
+
+angular.module("oasp.oaspUi.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("oasp/oasp-ui/html/button-bar/button-bar.html","<div class=\"btn-group btn-group-sm\" role=\"group\"><button data-ng-repeat=\"buttonDef in buttonDefs\" data-ng-click=\"onButtonClick(buttonDef)\" data-ng-disabled=\"isButtonDisabled(buttonDef)\" class=\"btn btn-sm btn-default\"><span data-ng-bind=\"buttonDef.label\"></span></button></div>");
+$templateCache.put("oasp/oasp-ui/html/spinner/spinner.html","<div class=\"spinner-container\" data-ng-show=\"spinnerVisible\"><div class=\"spinner-backdrop\"></div><span us-spinner=\"spinnerOptions\" data-spinner-start-active=\"1\"></span></div>");}]);
 angular.module('oasp.oaspI18n', ['pascalprecht.translate', 'oasp.oaspI18n.templates'], ["$translateProvider", "$httpProvider", function ($translateProvider, $httpProvider) {
     'use strict';
     $httpProvider.interceptors.push('templateLoadTranslationInterceptor');
@@ -438,27 +423,6 @@ angular.module('oasp.oaspI18n', ['pascalprecht.translate', 'oasp.oaspI18n.templa
 }]);
 
 
-angular.module('oasp.oaspI18n').controller('LanguageChangeCntl', ["$scope", "$translate", "oaspTranslation", function ($scope, $translate, oaspTranslation) {
-    'use strict';
-    $scope.supportedLanguages = oaspTranslation.getSupportedLanguages();
-
-    $scope.changeLanguage = function (lang) {
-        $translate.use(lang);
-    };
-    $scope.getCurrentLanguage = function () {
-        return $translate.use();
-    };
-}]);
-angular.module('oasp.oaspI18n').directive('languageChange', function () {
-    'use strict';
-    return {
-        restrict: 'EA',
-        scope: true,
-        replace: true,
-        controller: 'LanguageChangeCntl',
-        templateUrl: 'oasp-i18n/html/language-change.html'
-    };
-});
 angular.module('oasp.oaspI18n').provider('oaspTranslation', ["$translatePartialLoaderProvider", "$translateProvider", function ($translatePartialLoaderProvider, $translateProvider) {
     'use strict';
 
@@ -518,7 +482,7 @@ angular.module('oasp.oaspI18n').provider('oaspTranslation', ["$translatePartialL
 }]);
 angular.module('oasp.oaspI18n').service('templateLoadTranslationInterceptor', ["$rootScope", "oaspTranslation", function ($rootScope, oaspTranslation) {
     'use strict';
-    var regexp = new RegExp("/?([^/]+)/html/");
+    var regexp = new RegExp('/?([^/]+)/html/');
     return {
         'request': function (config) {
             if (config.url) {
@@ -531,19 +495,27 @@ angular.module('oasp.oaspI18n').service('templateLoadTranslationInterceptor', ["
         }
     };
 }]);
-angular.module('oasp.oaspI18n.templates', []).run(['$templateCache', function($templateCache) {
-  $templateCache.put("oasp-i18n/html/language-change.html",
-    "<li class=\"dropdown language-dropdown\">\n" +
-    "    <a class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\"><span class=\"icon-container\"><span\n" +
-    "            class=\"icon icon-{{getCurrentLanguage()}}-24\"></span></span><span translate=\"\">OASP.LANGUAGE</span><span\n" +
-    "            class=\"caret\"></span>\n" +
-    "    </a>\n" +
-    "    <ul class=\"dropdown-menu\" role=\"menu\">\n" +
-    "        <li ng-repeat=\"lang in supportedLanguages\" ng-show=\"getCurrentLanguage()!=lang.key\">\n" +
-    "            <a dropdown-toggle=\"\" ng-click=\"changeLanguage(lang.key)\">\n" +
-    "                <span class=\"icon icon-{{lang.key}}-24\"></span>{{lang.label}}\n" +
-    "            </a>\n" +
-    "        </li>\n" +
-    "    </ul>\n" +
-    "</li>");
+
+angular.module('oasp.oaspI18n').controller('LanguageChangeCntl', ["$scope", "$translate", "oaspTranslation", function ($scope, $translate, oaspTranslation) {
+    'use strict';
+    $scope.supportedLanguages = oaspTranslation.getSupportedLanguages();
+
+    $scope.changeLanguage = function (lang) {
+        $translate.use(lang);
+    };
+    $scope.getCurrentLanguage = function () {
+        return $translate.use();
+    };
 }]);
+angular.module('oasp.oaspI18n').directive('languageChange', function () {
+    'use strict';
+    return {
+        restrict: 'EA',
+        scope: true,
+        replace: true,
+        controller: 'LanguageChangeCntl',
+        templateUrl: 'oasp/oasp-i18n/html/language-change.html'
+    };
+});
+
+angular.module("oasp.oaspI18n.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("oasp/oasp-i18n/html/language-change.html","<li class=\"dropdown language-dropdown\" dropdown=\"\"><a href=\"\" class=\"dropdown-toggle\" dropdown-toggle=\"\"><span class=\"icon-container\"><span class=\"icon icon-{{getCurrentLanguage()}}-24\"></span></span><span translate=\"\">OASP.LANGUAGE</span><span class=\"caret\"></span></a><ul class=\"dropdown-menu\" role=\"menu\"><li ng-repeat=\"lang in supportedLanguages\" ng-show=\"getCurrentLanguage()!=lang.key\"><a ng-click=\"changeLanguage(lang.key)\"><span class=\"icon icon-{{lang.key}}-24\"></span>{{lang.label}}</a></li></ul></li>");}]);
