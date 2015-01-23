@@ -266,10 +266,6 @@ angular.module('oasp.oaspSecurity')
         };
     });
 
-angular.module('oasp.oaspUi.modal', ['oasp.oaspUi.spinner', 'ui.bootstrap.modal', 'oasp.oaspUi.templates']);
-
-angular.module('oasp.oaspUi.spinner', ['angularSpinner', 'oasp.oaspUi.templates']);
-
 angular.module('oasp.oaspUi.buttonBar', ['oasp.oaspUi.templates']);
 
 /*global TrNgGrid*/
@@ -278,7 +274,40 @@ angular.module('oasp.oaspUi.oaspGrid', ['oasp.oaspUi.templates', 'trNgGrid']).ru
     TrNgGrid.tableCssClass = 'tr-ng-grid table table-striped';
 });
 
+angular.module('oasp.oaspUi.modal', ['oasp.oaspUi.spinner', 'ui.bootstrap.modal', 'oasp.oaspUi.templates']);
+
+angular.module('oasp.oaspUi.spinner', ['angularSpinner', 'oasp.oaspUi.templates']);
+
 angular.module('oasp.oaspUi', ['oasp.oaspUi.oaspGrid', 'oasp.oaspUi.spinner', 'oasp.oaspUi.modal', 'oasp.oaspUi.buttonBar']);
+
+angular.module('oasp.oaspUi.buttonBar')
+    .directive('buttonBar', function () {
+        'use strict';
+        return {
+            restrict: 'EA',
+            replace: true,
+            templateUrl: 'oasp/oasp-ui/html/button-bar/button-bar.html',
+            scope: {
+                buttonDefs: '='
+            },
+            link: function ($scope) {
+                $scope.onButtonClick = function (buttonDef) {
+                    if (buttonDef && angular.isFunction(buttonDef.onClick)) {
+                        buttonDef.onClick.apply(undefined, arguments);
+                    }
+                };
+                $scope.isButtonDisabled = function (buttonDef) {
+                    if (buttonDef && angular.isFunction(buttonDef.isActive)) {
+                        return !buttonDef.isActive.apply(undefined, arguments);
+                    }
+                    if (buttonDef && angular.isFunction(buttonDef.isNotActive)) {
+                        return buttonDef.isNotActive.apply(undefined, arguments);
+                    }
+                    return true;
+                };
+            }
+        };
+    });
 
 angular.module('oasp.oaspUi.modal')
     .constant('oaspUiModalDefaults', {
@@ -373,35 +402,6 @@ angular.module('oasp.oaspUi.spinner')
             }
         };
     }]);
-
-angular.module('oasp.oaspUi.buttonBar')
-    .directive('buttonBar', function () {
-        'use strict';
-        return {
-            restrict: 'EA',
-            replace: true,
-            templateUrl: 'oasp/oasp-ui/html/button-bar/button-bar.html',
-            scope: {
-                buttonDefs: '='
-            },
-            link: function ($scope) {
-                $scope.onButtonClick = function (buttonDef) {
-                    if (buttonDef && angular.isFunction(buttonDef.onClick)) {
-                        buttonDef.onClick.apply(undefined, arguments);
-                    }
-                };
-                $scope.isButtonDisabled = function (buttonDef) {
-                    if (buttonDef && angular.isFunction(buttonDef.isActive)) {
-                        return !buttonDef.isActive.apply(undefined, arguments);
-                    }
-                    if (buttonDef && angular.isFunction(buttonDef.isNotActive)) {
-                        return buttonDef.isNotActive.apply(undefined, arguments);
-                    }
-                    return true;
-                };
-            }
-        };
-    });
 
 angular.module("oasp.oaspUi.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("oasp/oasp-ui/html/button-bar/button-bar.html","<div class=\"btn-group btn-group-sm\" role=\"group\"><button data-ng-repeat=\"buttonDef in buttonDefs\" data-ng-click=\"onButtonClick(buttonDef)\" data-ng-disabled=\"isButtonDisabled(buttonDef)\" class=\"btn btn-sm btn-default\"><span data-ng-bind=\"buttonDef.label\"></span></button></div>");
 $templateCache.put("oasp/oasp-ui/html/spinner/spinner.html","<div class=\"spinner-container\" data-ng-show=\"spinnerVisible\"><div class=\"spinner-backdrop\"></div><span us-spinner=\"spinnerOptions\" data-spinner-start-active=\"1\"></span></div>");}]);
