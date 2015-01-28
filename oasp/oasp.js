@@ -268,13 +268,13 @@ angular.module('oasp.oaspSecurity')
 
 angular.module('oasp.oaspUi.buttonBar', ['oasp.oaspUi.templates']);
 
+angular.module('oasp.oaspUi.modal', ['oasp.oaspUi.spinner', 'ui.bootstrap.modal', 'oasp.oaspUi.templates']);
+
 /*global TrNgGrid*/
 angular.module('oasp.oaspUi.oaspGrid', ['oasp.oaspUi.templates', 'trNgGrid']).run(function () {
     'use strict';
     TrNgGrid.tableCssClass = 'tr-ng-grid table table-striped';
 });
-
-angular.module('oasp.oaspUi.modal', ['oasp.oaspUi.spinner', 'ui.bootstrap.modal', 'oasp.oaspUi.templates']);
 
 angular.module('oasp.oaspUi.spinner', ['angularSpinner', 'oasp.oaspUi.templates']);
 
