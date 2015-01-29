@@ -268,6 +268,8 @@ angular.module('oasp.oaspSecurity')
 
 angular.module('oasp.oaspUi.buttonBar', ['oasp.oaspUi.templates']);
 
+angular.module('oasp.oaspUi.spinner', ['angularSpinner', 'oasp.oaspUi.templates']);
+
 angular.module('oasp.oaspUi.modal', ['oasp.oaspUi.spinner', 'ui.bootstrap.modal', 'oasp.oaspUi.templates']);
 
 /*global TrNgGrid*/
@@ -275,8 +277,6 @@ angular.module('oasp.oaspUi.oaspGrid', ['oasp.oaspUi.templates', 'trNgGrid']).ru
     'use strict';
     TrNgGrid.tableCssClass = 'tr-ng-grid table table-striped';
 });
-
-angular.module('oasp.oaspUi.spinner', ['angularSpinner', 'oasp.oaspUi.templates']);
 
 angular.module('oasp.oaspUi', ['oasp.oaspUi.oaspGrid', 'oasp.oaspUi.spinner', 'oasp.oaspUi.modal', 'oasp.oaspUi.buttonBar']);
 
@@ -309,31 +309,6 @@ angular.module('oasp.oaspUi.buttonBar')
         };
     });
 
-angular.module('oasp.oaspUi.modal')
-    .constant('oaspUiModalDefaults', {
-        backdrop: 'static',
-        keyboard: false
-    })
-    .config(["$provide", "oaspUiModalDefaults", function ($provide, oaspUiModalDefaults) {
-        'use strict';
-        var $modalDecorator = function ($delegate, globalSpinner) {
-            return {
-                open: function (options) {
-                    globalSpinner.show();
-                    var result = $delegate.open(angular.extend({}, oaspUiModalDefaults, options));
-                    result.opened
-                        .then(function () {
-                            globalSpinner.hide();
-                        }, function () {
-                            globalSpinner.hide();
-                        });
-                    return result;
-                }
-            };
-        };
-        $modalDecorator.$inject = ["$delegate", "globalSpinner"];
-        $provide.decorator('$modal', $modalDecorator);
-    }]);
 angular.module('oasp.oaspUi.spinner')
     .factory('globalSpinner', ["$rootScope", "$q", function ($rootScope, $q) {
         'use strict';
@@ -403,8 +378,33 @@ angular.module('oasp.oaspUi.spinner')
         };
     }]);
 
-angular.module("oasp.oaspUi.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("oasp/oasp-ui/html/button-bar/button-bar.html","<div class=\"btn-group btn-group-sm\" role=\"group\"><button data-ng-repeat=\"buttonDef in buttonDefs\" data-ng-click=\"onButtonClick(buttonDef)\" data-ng-disabled=\"isButtonDisabled(buttonDef)\" class=\"btn btn-sm btn-default\"><span data-ng-bind=\"buttonDef.label\"></span></button></div>");
-$templateCache.put("oasp/oasp-ui/html/spinner/spinner.html","<div class=\"spinner-container\" data-ng-show=\"spinnerVisible\"><div class=\"spinner-backdrop\"></div><span us-spinner=\"spinnerOptions\" data-spinner-start-active=\"1\"></span></div>");}]);
+angular.module('oasp.oaspUi.modal')
+    .constant('oaspUiModalDefaults', {
+        backdrop: 'static',
+        keyboard: false
+    })
+    .config(["$provide", "oaspUiModalDefaults", function ($provide, oaspUiModalDefaults) {
+        'use strict';
+        var $modalDecorator = function ($delegate, globalSpinner) {
+            return {
+                open: function (options) {
+                    globalSpinner.show();
+                    var result = $delegate.open(angular.extend({}, oaspUiModalDefaults, options));
+                    result.opened
+                        .then(function () {
+                            globalSpinner.hide();
+                        }, function () {
+                            globalSpinner.hide();
+                        });
+                    return result;
+                }
+            };
+        };
+        $modalDecorator.$inject = ["$delegate", "globalSpinner"];
+        $provide.decorator('$modal', $modalDecorator);
+    }]);
+angular.module("oasp.oaspUi.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("oasp/oasp-ui/html/spinner/spinner.html","<div class=\"spinner-container\" data-ng-show=\"spinnerVisible\"><div class=\"spinner-backdrop\"></div><span us-spinner=\"spinnerOptions\" data-spinner-start-active=\"1\"></span></div>");
+$templateCache.put("oasp/oasp-ui/html/button-bar/button-bar.html","<div class=\"btn-group btn-group-sm\" role=\"group\"><button data-ng-repeat=\"buttonDef in buttonDefs\" data-ng-click=\"onButtonClick(buttonDef)\" data-ng-disabled=\"isButtonDisabled(buttonDef)\" class=\"btn btn-sm btn-default\"><span data-ng-bind=\"buttonDef.label\"></span></button></div>");}]);
 angular.module('oasp.oaspI18n', ['pascalprecht.translate', 'oasp.oaspI18n.templates'], ["$translateProvider", "$httpProvider", function ($translateProvider, $httpProvider) {
     'use strict';
     $httpProvider.interceptors.push('templateLoadTranslationInterceptor');
