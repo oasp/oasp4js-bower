@@ -15,7 +15,7 @@ Install package using bower.
 bower install oasp --save
 ``` 
 
-The +save+ parameter will add the package to the dependencies in the +bower.json+ file. The OASP4JS Application Template uses [wiredep](https://github.com/taptapship/wiredep) which will automatically attach all needed scripts to the +index.html+ file (including +oasp.min.js+ needed here).
+The `save` parameter will add the package to the dependencies in the `bower.json` file. The OASP4JS Application Template uses [wiredep](https://github.com/taptapship/wiredep) which will automatically attach all needed scripts to the `index.html` file (including `oasp.min.js` needed here).
 
 ### Installation for other applications
 
