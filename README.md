@@ -19,7 +19,7 @@ The `save` parameter will add the package to the dependencies in the `bower.json
 
 ### Instructions for other applications
 
-If you are developing your own application without the OASP4JS Application Template and you are not using any plugins which will attach scripts automatically to your main html, please perform the following steps.
+If you are developing your own application without the OASP4JS Application Template and you are not using plugins which will attach scripts automatically to your main html, please perform the following steps.
 
 Install the package using `bower`:
 
