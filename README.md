@@ -5,9 +5,9 @@ This repository is for distribution on `bower`. The source for this module can b
 
 ## Install
 
-### Instructions for installing ng-modules for [OASP4JS Application Template](https://github.com/oasp/generator-oasp)
+### Instructions for installing ng-modules for OASP4JS Application Template
 
-If you have already set up the OASP4JS Application Template and you want to use OASP4JS ng-modules you have to perform steps listed below.
+If you have already set up the [OASP4JS Application Template](https://github.com/oasp/generator-oasp) and you want to use OASP4JS ng-modules you have to perform steps listed below.
 
 Install package using bower.
 
